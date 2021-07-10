@@ -1,0 +1,23 @@
+body {
+  font-family: 'Open Sans Condensed';
+  background-color: #fcde67;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.content {
+  align-self: center;
+}
