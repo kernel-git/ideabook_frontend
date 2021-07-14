@@ -9,26 +9,59 @@ import CustomButton from '../custom-button/custom-button.component';
 
 import './header.styles.scss';
 
-const Header = ({ currentUser, setCurrentUser, ...otherProps }) => (
-  <div className={`header ${!currentUser ? 'header_centered' : ''}`}>
-    <div
-      className='header__logo'
-      onClick={() => {
-        if (currentUser) otherProps.history.push('/');
-      }}
-    >
-      IdeaBook
-    </div>
-    {currentUser ? (
-      <div className='header__user-group'>
-        <div className='header__status'>You are logged in</div>
-        <CustomButton handleClick={() => setCurrentUser(null)}>
-          Log out
-        </CustomButton>
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    const { currentUser, setCurrentUser } = this.props;
+
+    fetch('http://localhost:3001/sign_out', {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        Authorization: currentUser['jwtData'],
+      },
+    })
+      .catch((e) => {
+        alert('Request cannot reach ideabook API');
+        console.log(e);
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setCurrentUser(null);
+        } else {
+          alert('Log out failed (possibly because you are already logged out)');
+          setCurrentUser(null);
+        }
+      });
+  }
+
+  render() {
+    const { currentUser, ...otherProps } = this.props;
+    return (
+      <div className={`header ${!currentUser ? 'header_centered' : ''}`}>
+        <div
+          className='header__logo'
+          onClick={() => {
+            if (currentUser) otherProps.history.push('/');
+          }}
+        >
+          IdeaBook
+        </div>
+        {currentUser ? (
+          <div className='header__user-group'>
+            <div className='header__status'>You are logged in</div>
+            <CustomButton handleClick={this.handleClick}>Log out</CustomButton>
+          </div>
+        ) : null}
       </div>
-    ) : null}
-  </div>
-);
+    );
+  }
+}
 
 const mapStateToProps = (state) => ({
   currentUser: selectCurrentUser(state),

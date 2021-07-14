@@ -17,14 +17,40 @@ class SignInForm extends React.Component {
     this.setState({ [name]: value });
   };
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
 
     const { email, password } = this.state;
     console.log('email:', email);
     console.log('pass:', password);
 
-    this.props.setCurrentUser(true);
+    console.log('Waiting for API response...');
+
+    fetch('http://localhost:3001/sign_in', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({ user: { email, password } }),
+    })
+      .catch((e) => {
+        alert('Request cannot reach ideabook API');
+        console.log(e);
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          const jwtData = response.headers.get('Authorization');
+          this.props.setCurrentUser({ email, jwtData });
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data['errors'] && data['errors'][0]['status'] === '401') {
+          console.log(data);
+          alert('Login failed');
+        }
+      });
   };
 
   render() {
@@ -45,7 +71,9 @@ class SignInForm extends React.Component {
             handleChange={this.handleChange}
           />
         </div>
-        <CustomButton type='submit' handleClick={this.handleSubmit}>Submit</CustomButton>
+        <CustomButton type='submit' handleClick={this.handleSubmit}>
+          Submit
+        </CustomButton>
       </div>
     );
   }
