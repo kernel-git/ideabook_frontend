@@ -25,8 +25,9 @@ class SignInForm extends React.Component {
     console.log('pass:', password);
 
     console.log('Waiting for API response...');
+    console.log(process.env);
 
-    fetch('http://localhost:3001/sign_in', {
+    fetch(`${process.env.REACT_APP_BACKEND_SIGN_IN_PATH}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
