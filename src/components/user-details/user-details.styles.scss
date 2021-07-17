@@ -1,0 +1,38 @@
+.user-details {
+  width: 60vw;
+  display: flex;
+  align-items: center;
+
+  &__logo {
+    height: 200px;
+    width: 200px;
+    border-radius: 15px;
+  }
+
+  &__logo-group {
+    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__data-wrapper {
+    padding: 5px 10px;
+    display: flex;
+  }
+
+  &__label {
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 10px;
+  }
+
+  &__data {
+    font-size: 20px;
+  }
+}

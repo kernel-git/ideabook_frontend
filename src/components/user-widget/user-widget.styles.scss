@@ -1,0 +1,31 @@
+.user-widget {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 28vw;
+  height: 100px;
+  margin: 10px;
+
+  
+  &__logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+  }
+
+  &__group {
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__data {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    color: #030e12;
+    font-size: 20px;
+  }
+}

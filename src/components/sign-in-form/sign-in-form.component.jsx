@@ -25,7 +25,9 @@ class SignInForm extends React.Component {
     console.log('pass:', password);
 
     console.log('Waiting for API response...');
-    console.log(process.env);
+
+    let status = 0
+    let jwtData = ''
 
     fetch(`${process.env.REACT_APP_BACKEND_SIGN_IN_PATH}`, {
       method: 'POST',
@@ -40,16 +42,27 @@ class SignInForm extends React.Component {
         console.log(e);
       })
       .then((response) => {
-        if (response.status === 200) {
-          const jwtData = response.headers.get('Authorization');
-          this.props.setCurrentUser({ email, jwtData });
+        status = response.status
+        if (status === 200) {
+          jwtData = response.headers.get('authorization');
         }
         return response.json();
       })
       .then((data) => {
-        if (data['errors'] && data['errors'][0]['status'] === '401') {
-          console.log(data);
-          alert('Login failed');
+        switch(status) {
+          case 200:
+            this.props.setCurrentUser({ id: data['user_id'], jwtData });
+            break;
+          case 401:
+            console.log(data);
+            alert('Login failed');
+            break;
+          default:
+            console.log(`Unexpected response status: ${status}`);
+            console.log(data);
+            alert(
+              `Unexpected response status: ${status}. More info in console`
+            );
         }
       });
   };

@@ -8,6 +8,7 @@ import { selectCurrentUser } from '../../redux/user/user.selectors';
 import CustomButton from '../custom-button/custom-button.component';
 
 import './header.styles.scss';
+import StatusWidget from '../status-widget/status-widget.component';
 
 class Header extends React.Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class Header extends React.Component {
         </div>
         {currentUser ? (
           <div className='header__user-group'>
-            <div className='header__status'>You are logged in</div>
+            <StatusWidget />
             <CustomButton handleClick={this.handleClick}>Log out</CustomButton>
           </div>
         ) : null}
