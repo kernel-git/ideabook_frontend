@@ -20,7 +20,7 @@ class Header extends React.Component {
   handleClick() {
     const { currentUser, setCurrentUser } = this.props;
 
-    fetch(`${process.env.REACT_APP_BACKEND_PATH}/ssign_out`, {
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/sign_out`, {
       method: 'DELETE',
       headers: {
         Accept: 'application/json',
