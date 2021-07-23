@@ -17,7 +17,7 @@ class UserDetails extends React.Component {
 
     console.log(id);
 
-    fetch(`${process.env.REACT_APP_BACKEND_USERS_SHOW}/${id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/users/${id}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

@@ -1,25 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import { setCurrentUser } from '../../redux/user/user.actions';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
+import ObjectWidget from '../object-widget/object-widget.component';
 
-import './status-widget.styles.scss';
+import './company-list.styles.scss';
 
-class StatusWidget extends React.Component {
+class CompanyList extends React.Component {
   state = {
-    user: {},
+    companies: [],
   };
 
   componentDidMount() {
     const { currentUser, setCurrentUser } = this.props;
 
     let status = 0;
-    fetch(`${process.env.REACT_APP_BACKEND_PATH}/users/${currentUser.id}`, {
+
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/companies`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
-        Authorization: currentUser.jwtData,
+        Authorization: currentUser['jwtData'],
       },
     })
       .catch((e) => {
@@ -36,7 +37,14 @@ class StatusWidget extends React.Component {
             setCurrentUser(null);
             break;
           case 200:
-            this.setState({ user: data });
+            this.setState({
+              companies: data.map(({ id, avatar_url, name, slogan }) => ({
+                id,
+                avatarUrl: avatar_url,
+                name,
+                slogan,
+              })),
+            });
             break;
           default:
             console.log(`Unexpected response status: ${status}`);
@@ -49,17 +57,17 @@ class StatusWidget extends React.Component {
   }
 
   render() {
-    const { currentUser, history } = this.props;
-    const { user: { avatar_url, first_name, last_name } } = this.state;
+    const { companies } = this.state;
     return (
-      <div
-        className='status-widget'
-        onClick={() => history.push(`/users/${currentUser.id}`)}
-      >
-        <img className='status-widget__logo' alt='avatar' src={avatar_url} />
-        <div className='status-widget__data'>
-          {first_name} {last_name}
-        </div>
+      <div className='company-list'>
+        {companies.map(({ id, avatarUrl, name, slogan }) => (
+          <ObjectWidget
+            key={id}
+            logoUrl={avatarUrl}
+            upperGroup={[name]}
+            lowerGroup={[slogan]}
+          />
+        ))}
       </div>
     );
   }
@@ -73,6 +81,4 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(StatusWidget)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyList);

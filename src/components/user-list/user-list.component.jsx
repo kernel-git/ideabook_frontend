@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { setCurrentUser } from '../../redux/user/user.actions';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
-import UserWidget from '../user-widget/user-widget.component';
+import ObjectWidget from '../object-widget/object-widget.component';
 
 import './user-list.styles.scss';
 
@@ -16,7 +16,7 @@ class UserList extends React.Component {
 
     let status = 0;
 
-    fetch(`${process.env.REACT_APP_BACKEND_USERS_INDEX}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/users`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -37,7 +37,22 @@ class UserList extends React.Component {
             setCurrentUser(null);
             break;
           case 200:
-            this.setState({ users: data });
+            this.setState({
+              users: data.map(
+                ({ id, avatar_url, first_name, last_name, birth_date }) => ({
+                  id,
+                  avatarUrl: avatar_url,
+                  firstName: first_name,
+                  lastName: last_name,
+                  age:
+                    new Date(
+                      new Date() - Date.parse(birth_date)
+                    ).getFullYear() -
+                    1970 +
+                    ' years',
+                })
+              ),
+            });
             break;
           default:
             console.log(`Unexpected response status: ${status}`);
@@ -53,8 +68,12 @@ class UserList extends React.Component {
     const { users } = this.state;
     return (
       <div className='user-list'>
-        {users.map(({ id, ...otherProps }) => (
-          <UserWidget key={id} {...otherProps} />
+        {users.map(({ id, avatarUrl, firstName, lastName, age }) => (
+          <ObjectWidget
+            key={id}
+            logoUrl={avatarUrl}
+            upperGroup={[firstName, lastName, age]}
+          />
         ))}
       </div>
     );
