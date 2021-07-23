@@ -20,7 +20,7 @@ const ObjectWidget = ({ logoUrl, upperGroup, lowerGroup, handleClick, handleEdit
         ) : null}
       </div>
     </div>
-    <CustomButton handleClick={handleEdit}>Edit</CustomButton>
+    <CustomButton negative handleClick={handleEdit}>Edit</CustomButton>
   </div>
 );
 
