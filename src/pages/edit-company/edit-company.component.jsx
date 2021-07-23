@@ -5,14 +5,14 @@ import CustomForm from '../../components/custom-form/custom-form.component';
 
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
-import './edit-user.styles.scss';
+import './edit-company.styles.scss';
 
-class EditUserPage extends React.Component {
+class EditCompanyPage extends React.Component {
   state = {
     avatarUrl: '',
-    firstName: '',
-    lastName: '',
-    email: '',
+    name: '',
+    slogan: '',
+    description: '',
   };
 
   componentDidMount() {
@@ -20,7 +20,7 @@ class EditUserPage extends React.Component {
 
     let status = 0;
 
-    fetch(`${process.env.REACT_APP_BACKEND_PATH}/users/${match.params.id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/companies/${match.params.id}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -41,12 +41,12 @@ class EditUserPage extends React.Component {
             setCurrentUser(null);
             break;
           case 200:
-            const { avatar_url, first_name, last_name, email } = data;
+            const { avatar_url, name, slogan, description } = data;
             this.setState({
                 avatarUrl: avatar_url,
-                firstName: first_name,
-                lastName: last_name,
-                email: email,
+                name,
+                slogan,
+                description,
             });
             break;
           default:
@@ -63,12 +63,12 @@ class EditUserPage extends React.Component {
     event.preventDefault();
 
     const { match, currentUser, setCurrentUser, history } = this.props;
-    const { avatarUrl, email, firstName, lastName } =
+    const { avatarUrl, name, slogan, description } =
       innerState;
 
     let status = 0;
 
-    fetch(`${process.env.REACT_APP_BACKEND_PATH}/users/${match.params.id}`, {
+    fetch(`${process.env.REACT_APP_BACKEND_PATH}/companies/${match.params.id}`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -76,11 +76,11 @@ class EditUserPage extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user: {
+        company: {
           avatar_url: avatarUrl,
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
+          name: name,
+          slogan: slogan,
+          description: description,
         },
       }),
     })
@@ -99,7 +99,7 @@ class EditUserPage extends React.Component {
             break;
           case 200:
             alert('Changed');
-            history.push(`/users/${match.params.id}`);
+            history.push(`/companies/${match.params.id}`);
             break;
           default:
             console.log(`Unexpected response status: ${status}`);
@@ -112,16 +112,16 @@ class EditUserPage extends React.Component {
   };
 
   render() {
-    const { avatarUrl, firstName, lastName, email } = this.state;
+    const { avatarUrl, name, slogan, description } = this.state;
     return (
-      <div className='edit-user-page'>
+      <div className='edit-company-page'>
         <CustomForm
-          title='Edit user data'
+          title='Edit company data'
           fields={{
             avatarUrl: { label: 'avatar url', value: avatarUrl },
-            firstName: { label: 'first name', value: firstName },
-            lastName: { label: 'last name', value: lastName },
-            email: { type: 'email', value: email },
+            name: { value: name },
+            slogan: { value: slogan },
+            description: { value: description },
           }}
           handleSubmit={this.handleSubmit}
         />
@@ -139,5 +139,5 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(EditUserPage)
+  connect(mapStateToProps, mapDispatchToProps)(EditCompanyPage)
 );
