@@ -23,6 +23,14 @@
     flex-direction: row;
     align-items: center;
     padding: 10px 20px;
+
+    & > * {
+      margin-right: 15px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
   
   &__status {

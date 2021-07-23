@@ -1,20 +1,31 @@
 .object-widget {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   min-width: 28vw;
+  // max-width: 48%;
   height: 100px;
   margin: 10px;
 
-  
+
+  &__data-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+  }
+
   &__logo {
     width: 100px;
     height: 100px;
     border-radius: 50px;
+    text-align: center;
+    line-height: 100px;
   }
 
   &__group {
-    padding-left: 10px;
+    padding: 0 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;

@@ -55,6 +55,12 @@ class Header extends React.Component {
         </div>
         {currentUser ? (
           <div className='header__user-group'>
+            <CustomButton handleClick={() => {otherProps.history.push('/users')}}>Users</CustomButton>
+            <CustomButton handleClick={() => {otherProps.history.push('/companies')}}>Companies</CustomButton>
+          </div>
+        ) : null}
+        {currentUser ? (
+          <div className='header__user-group'>
             <StatusWidget />
             <CustomButton handleClick={this.handleClick}>Log out</CustomButton>
           </div>

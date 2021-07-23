@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { setCurrentUser } from '../../redux/user/user.actions';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 import ObjectWidget from '../object-widget/object-widget.component';
@@ -66,6 +67,7 @@ class UserList extends React.Component {
 
   render() {
     const { users } = this.state;
+    const { history } = this.props;
     return (
       <div className='user-list'>
         {users.map(({ id, avatarUrl, firstName, lastName, age }) => (
@@ -73,6 +75,8 @@ class UserList extends React.Component {
             key={id}
             logoUrl={avatarUrl}
             upperGroup={[firstName, lastName, age]}
+            handleClick={() => history.push(`/users/${id}`)}
+            handleEdit={() => history.push(`/users/${id}/edit`)}
           />
         ))}
       </div>
@@ -88,4 +92,4 @@ const mapDispatchToProps = (dispatch) => ({
   setCurrentUser: (user) => dispatch(setCurrentUser(user)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserList);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserList));
