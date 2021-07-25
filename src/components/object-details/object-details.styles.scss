@@ -1,7 +1,13 @@
 .object-details {
   width: 60vw;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+
+  &__object-data {
+    display: flex;
+    align-items: center;
+  }
 
   &__logo {
     height: 200px;
@@ -24,6 +30,10 @@
   &__data-wrapper {
     padding: 5px 10px;
     display: flex;
+
+    &_alt {
+      flex-direction: column;
+    }
   }
 
   &__label {

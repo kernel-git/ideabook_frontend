@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import ObjectDetails from '../../components/object-details/object-details.component';
+import ObjectWidget from '../../components/object-widget/object-widget.component';
 import { setCurrentUser } from '../../redux/user/user.actions';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -9,7 +10,7 @@ import './user-profile.styles.scss';
 
 class UserProfilePage extends React.Component {
   state = {
-    user: {},
+    user: { company: {} },
   };
 
   componentDidMount() {
@@ -45,6 +46,7 @@ class UserProfilePage extends React.Component {
               birth_date,
               email,
               created_at,
+              company,
             } = data;
             this.setState({
               user: {
@@ -54,6 +56,12 @@ class UserProfilePage extends React.Component {
                 birthDate: birth_date,
                 createdAt: created_at,
                 email,
+                company: {
+                  id: company.id,
+                  avatarUrl: company.avatar_url,
+                  name: company.name,
+                  slogan: company.slogan,
+                },
               },
             });
             break;
@@ -68,8 +76,18 @@ class UserProfilePage extends React.Component {
   }
 
   render() {
-    const { user: { avatarUrl, firstName, lastName, birthDate, createdAt, email } } =
-      this.state;
+    const {
+      user: {
+        avatarUrl,
+        firstName,
+        lastName,
+        birthDate,
+        createdAt,
+        email,
+        company,
+      },
+    } = this.state;
+    const { history } = this.props;
     return (
       <div className='user-profile-page'>
         <ObjectDetails
@@ -82,6 +100,23 @@ class UserProfilePage extends React.Component {
             { label: 'Email', data: email },
             { label: 'Date of birth', data: birthDate },
             { label: 'Created at', data: createdAt },
+          ]}
+          additional={[
+            {
+              label: 'Company-employer',
+              data: (
+                <ObjectWidget
+                  key={company.id}
+                  logoUrl={company.avatarUrl}
+                  upperGroup={[company.name]}
+                  lowerGroup={[company.slogan]}
+                  handleClick={() => history.push(`/companies/${company.id}`)}
+                  handleEdit={() =>
+                    history.push(`/companies/${company.id}/edit`)
+                  }
+                />
+              ),
+            },
           ]}
         />
       </div>

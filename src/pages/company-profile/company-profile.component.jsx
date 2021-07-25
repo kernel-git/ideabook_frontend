@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import ObjectDetails from '../../components/object-details/object-details.component';
+import ObjectWidget from '../../components/object-widget/object-widget.component';
 import { setCurrentUser } from '../../redux/user/user.actions';
 import { selectCurrentUser } from '../../redux/user/user.selectors';
 
@@ -9,7 +10,7 @@ import './company-profile.styles.scss';
 
 class CompanyProfilePage extends React.Component {
   state = {
-    company: {},
+    company: { employees: [] },
   };
 
   componentDidMount() {
@@ -41,13 +42,27 @@ class CompanyProfilePage extends React.Component {
             setCurrentUser(null);
             break;
           case 200:
-            const { avatar_url, name, slogan, description } = data;
+            const { avatar_url, name, slogan, description, users } = data;
             this.setState({
               company: {
                 avatarUrl: avatar_url,
                 name,
                 slogan,
                 description,
+                employees: users.map(
+                  ({ id, avatar_url, first_name, last_name, birth_date }) => ({
+                    id,
+                    avatarUrl: avatar_url,
+                    firstName: first_name,
+                    lastName: last_name,
+                    age:
+                      new Date(
+                        new Date() - Date.parse(birth_date)
+                      ).getFullYear() -
+                      1970 +
+                      ' years',
+                  })
+                ),
               },
             });
             break;
@@ -63,8 +78,9 @@ class CompanyProfilePage extends React.Component {
 
   render() {
     const {
-      company: { avatarUrl, name, slogan, description },
+      company: { avatarUrl, name, slogan, description, employees },
     } = this.state;
+    const { history } = this.props;
     return (
       <div className='company-profile-page'>
         <ObjectDetails
@@ -73,6 +89,22 @@ class CompanyProfilePage extends React.Component {
           extraGroup={[
             { label: 'Slogan', data: slogan },
             { label: 'Description', data: description },
+          ]}
+          additional={[
+            {
+              label: 'Employees',
+              data: employees.map(
+                ({ id, avatarUrl, firstName, lastName, age }) => (
+                  <ObjectWidget
+                    key={id}
+                    logoUrl={avatarUrl}
+                    upperGroup={[firstName, lastName, age]}
+                    handleClick={() => history.push(`/users/${id}`)}
+                    handleEdit={() => history.push(`/users/${id}/edit`)}
+                  />
+                )
+              ),
+            },
           ]}
         />
       </div>
