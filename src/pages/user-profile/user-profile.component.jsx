@@ -40,6 +40,7 @@ class UserProfilePage extends React.Component {
             break;
           case 200:
             const {
+              id,
               avatar_url,
               first_name,
               last_name,
@@ -47,9 +48,14 @@ class UserProfilePage extends React.Component {
               email,
               created_at,
               company,
+              role,
             } = data;
+            let color = 'inherit';
+            if (role === 'superadmin') color = 'red';
+            else if (role === 'admin') color = 'blue';
             this.setState({
               user: {
+                id,
                 avatarUrl: avatar_url,
                 firstName: first_name,
                 lastName: last_name,
@@ -62,6 +68,7 @@ class UserProfilePage extends React.Component {
                   name: company.name,
                   slogan: company.slogan,
                 },
+                color,
               },
             });
             break;
@@ -78,6 +85,7 @@ class UserProfilePage extends React.Component {
   render() {
     const {
       user: {
+        id,
         avatarUrl,
         firstName,
         lastName,
@@ -85,9 +93,18 @@ class UserProfilePage extends React.Component {
         createdAt,
         email,
         company,
+        color,
       },
     } = this.state;
-    const { history } = this.props;
+    const { history, currentUser } = this.props;
+    let handleEdit =
+      currentUser.id === id && color === 'inherit'
+        ? null
+        : () => history.push(`/companies/${company.id}/edit`);
+    let handleClick =
+      currentUser.id === id && color === 'inherit'
+        ? null
+        : () => history.push(`/companies/${company.id}`);
     return (
       <div className='user-profile-page'>
         <ObjectDetails
@@ -110,14 +127,14 @@ class UserProfilePage extends React.Component {
                   logoUrl={company.avatarUrl}
                   upperGroup={[company.name]}
                   lowerGroup={[company.slogan]}
-                  handleClick={() => history.push(`/companies/${company.id}`)}
-                  handleEdit={() =>
-                    history.push(`/companies/${company.id}/edit`)
-                  }
+                  handleClick={handleClick}
+                  handleEdit={handleEdit}
                 />
               ),
             },
           ]}
+          color={color}
+          handleEdit={() => history.push(`/users/${id}/edit`)}
         />
       </div>
     );

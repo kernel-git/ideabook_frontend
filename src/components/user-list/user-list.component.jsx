@@ -40,18 +40,26 @@ class UserList extends React.Component {
           case 200:
             this.setState({
               users: data.map(
-                ({ id, avatar_url, first_name, last_name, birth_date }) => ({
-                  id,
-                  avatarUrl: avatar_url,
-                  firstName: first_name,
-                  lastName: last_name,
-                  age:
-                    new Date(
-                      new Date() - Date.parse(birth_date)
-                    ).getFullYear() -
-                    1970 +
-                    ' years',
-                })
+                ({ id, avatar_url, first_name, last_name, birth_date, role }) => {
+                  let color = 'inherit'
+                  if(role === 'superadmin')
+                    color = 'red'
+                  else if(role === 'admin')
+                    color = 'blue'
+                  return({
+                    id,
+                    avatarUrl: avatar_url,
+                    firstName: first_name,
+                    lastName: last_name,
+                    color: color,
+                    age:
+                      new Date(
+                        new Date() - Date.parse(birth_date)
+                      ).getFullYear() -
+                      1970 +
+                      ' years',
+                  })
+                }
               ),
             });
             break;
@@ -70,11 +78,12 @@ class UserList extends React.Component {
     const { history } = this.props;
     return (
       <div className='user-list'>
-        {users.map(({ id, avatarUrl, firstName, lastName, age }) => (
+        {users.map(({ id, avatarUrl, firstName, lastName, age, color }) => (
           <ObjectWidget
             key={id}
             logoUrl={avatarUrl}
             upperGroup={[firstName, lastName, age]}
+            color={color}
             handleClick={() => history.push(`/users/${id}`)}
             handleEdit={() => history.push(`/users/${id}/edit`)}
           />

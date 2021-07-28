@@ -55,8 +55,24 @@ class Header extends React.Component {
         </div>
         {currentUser ? (
           <div className='header__user-group'>
-            <CustomButton handleClick={() => {otherProps.history.push('/users')}}>Users</CustomButton>
-            <CustomButton handleClick={() => {otherProps.history.push('/companies')}}>Companies</CustomButton>
+            {currentUser.role !== 'user' ? (
+              <CustomButton
+                handleClick={() => {
+                  otherProps.history.push('/users');
+                }}
+              >
+                Users
+              </CustomButton>
+            ) : null}
+            {currentUser.role === 'superadmin' ? (
+              <CustomButton
+                handleClick={() => {
+                  otherProps.history.push('/companies');
+                }}
+              >
+                Companies
+              </CustomButton>
+            ) : null}
           </div>
         ) : null}
         {currentUser ? (

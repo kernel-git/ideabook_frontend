@@ -1,4 +1,6 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import CustomButton from '../custom-button/custom-button.component';
 
 import './object-details.styles.scss';
 
@@ -7,18 +9,22 @@ class ObjectDetails extends React.Component {
     logoUrl: '',
     mainGroup: [],
     extraGroup: [],
-    additional: []
+    additional: [],
+    handleEdit: null,
   };
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
-      const { logoUrl, mainGroup, extraGroup, additional } = this.props;
+      const { logoUrl, mainGroup, extraGroup, additional, color, handleEdit } =
+        this.props;
       this.setState(
         {
           logoUrl: logoUrl,
           mainGroup: mainGroup,
           extraGroup: extraGroup,
           additional: additional,
+          color: color,
+          handleEdit: handleEdit,
         },
         () => console.log('state changed', this.state)
       );
@@ -26,7 +32,8 @@ class ObjectDetails extends React.Component {
   }
 
   render() {
-    const { logoUrl, mainGroup, extraGroup, additional } = this.state;
+    const { logoUrl, mainGroup, extraGroup, additional, color, handleEdit } =
+      this.state;
     console.log('state in render', this.state);
     return (
       <div className='object-details'>
@@ -41,7 +48,12 @@ class ObjectDetails extends React.Component {
                   {label ? (
                     <div className='object-details__label'>{label}:</div>
                   ) : null}
-                  <div className='object-details__data'>{data}</div>
+                  <div
+                    className='object-details__data'
+                    style={{ color: color ? color : '' }}
+                  >
+                    {data}
+                  </div>
                 </div>
               ))}
             </div>
@@ -57,6 +69,9 @@ class ObjectDetails extends React.Component {
                 </div>
               ))}
             </div>
+          ) : null}
+          {handleEdit ? (
+            <CustomButton handleClick={handleEdit}>Edit</CustomButton>
           ) : null}
         </div>
         {additional.map(({ label, data }, index) => (

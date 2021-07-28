@@ -36,7 +36,20 @@ class StatusWidget extends React.Component {
             setCurrentUser(null);
             break;
           case 200:
-            this.setState({ user: data });
+            const { avatar_url, first_name, last_name, role } = data;
+            console.log(data);
+            let color = 'inherit';
+            if (role === 'superadmin') color = 'red';
+            else if (role === 'admin') color = 'blue';
+
+            this.setState({
+              user: {
+                avatarUrl: avatar_url,
+                firstName: first_name,
+                lastName: last_name,
+                color: color,
+              },
+            });
             break;
           default:
             console.log(`Unexpected response status: ${status}`);
@@ -50,15 +63,20 @@ class StatusWidget extends React.Component {
 
   render() {
     const { currentUser, history } = this.props;
-    const { user: { avatar_url, first_name, last_name } } = this.state;
+    const {
+      user: { avatarUrl, firstName, lastName, color },
+    } = this.state;
     return (
       <div
         className='status-widget'
         onClick={() => history.push(`/users/${currentUser.id}`)}
       >
-        <img className='status-widget__logo' alt='avatar' src={avatar_url} />
-        <div className='status-widget__data'>
-          {first_name} {last_name}
+        <img className='status-widget__logo' alt='avatar' src={avatarUrl} />
+        <div
+          className='status-widget__data'
+          style={{ color: color ? color : '' }}
+        >
+          {firstName} {lastName}
         </div>
       </div>
     );

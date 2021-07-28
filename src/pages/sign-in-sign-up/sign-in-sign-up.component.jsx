@@ -40,7 +40,7 @@ class SignInSignUpPage extends React.Component {
       .then((data) => {
         switch (status) {
           case 200:
-            this.props.setCurrentUser({ id: data['user_id'], jwtData });
+            this.props.setCurrentUser({ id: data['user_id'], role: data['user_role'], jwtData });
             break;
           case 401:
             console.log(data);
